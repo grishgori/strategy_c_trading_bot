@@ -1,22 +1,22 @@
-  import os
-  import sys
-  import json
-  import time
-  from datetime import datetime, date, timedelta
+import os
+import sys
+import json
+import time
+from datetime import datetime, date, timedelta
 
-  try:
+try:
       import yfinance as yf
       import pandas as pd
       import numpy as np
       print("✅ All packages loaded!")
-  except ImportError as e:
+except ImportError as e:
       print(f"📦 Installing missing package: {e}")
       os.system("pip install yfinance pandas numpy python-dateutil")
       import yfinance as yf
       import pandas as pd
       import numpy as np
 
-  class GitHubActionsTrader:
+class GitHubActionsTrader:
       def __init__(self):
           self.start_date = date(2025, 8, 18)
           self.end_date = date(2025, 9, 29)
@@ -200,6 +200,6 @@
           self.save_state()
           print(f"💰 Balance: ${self.balance:.0f} | Positions: {len(self.positions)}")
 
-  if __name__ == "__main__":
+if __name__ == "__main__":
       bot = GitHubActionsTrader()
       bot.run_scan()
