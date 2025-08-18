@@ -1,34 +1,28 @@
-name: Strategy C Trading Bot
-
-on:
+  name: Strategy C Trading Bot
+  on:
     schedule:
-      - cron: '30 14 * * 1-5'  # 9:30 AM EST weekdays
-      - cron: '0 16 * * 1-5'   # 11:00 AM EST weekdays  
-      - cron: '0 18 * * 1-5'   # 1:00 PM EST weekdays
-      - cron: '0 20 * * 1-5'   # 3:00 PM EST weekdays
-      - cron: '50 20 * * 1-5'  # 3:50 PM EST weekdays
+      - cron: '30 14 * * 1-5'
+      - cron: '0 16 * * 1-5'
+      - cron: '0 18 * * 1-5'
+      - cron: '0 20 * * 1-5'
+      - cron: '50 20 * * 1-5'
     workflow_dispatch:
-
-jobs:
+  jobs:
     trade:
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
       - name: Install packages
         run: pip install yfinance pandas numpy
-
       - name: Run trading bot
         run: python trading_bot.py
-
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trading-diary
           path: "*.json"
