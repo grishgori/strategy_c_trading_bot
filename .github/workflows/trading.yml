@@ -2,47 +2,33 @@ name: Strategy C Trading Bot
 
 on:
     schedule:
-      - cron: '30 14'
-      - cron: '0 16'
-      - cron: '0 18'
-      - cron: '0 20'
-      - cron: '50 20'
+      - cron: '30 14 * * 1-5'  # 9:30 AM EST weekdays
+      - cron: '0 16 * * 1-5'   # 11:00 AM EST weekdays  
+      - cron: '0 18 * * 1-5'   # 1:00 PM EST weekdays
+      - cron: '0 20 * * 1-5'   # 3:00 PM EST weekdays
+      - cron: '50 20 * * 1-5'  # 3:50 PM EST weekdays
     workflow_dispatch:
 
 jobs:
     trade:
       runs-on: ubuntu-latest
-
       steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install yfinance pandas numpy python-dateutil
+      - name: Install packages
+        run: pip install yfinance pandas numpy
 
-      - name: Download previous trading state
-        uses: actions/download-artifact@v3
-        with:
-          name: trading-state
-          path: .
-        continue-on-error: true
+      - name: Run trading bot
+        run: python trading_bot.py
 
-      - name: Run Strategy C Trading Bot
-        run: |
-          python trading_bot.py
-
-      - name: Upload trading state
+      - name: Upload results
         uses: actions/upload-artifact@v3
         with:
-          name: trading-state
-          path: |
-            trading_state.json
-            trading_diary_*.json
-          retention-days: 90
+          name: trading-diary
+          path: "*.json"
