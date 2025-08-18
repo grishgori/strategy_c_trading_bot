@@ -1,5 +1,5 @@
-  name: Strategy C Trading Bot
-  on:
+name: Strategy C Trading Bot
+on:
     schedule:
       - cron: '30 14 * * 1-5'
       - cron: '0 16 * * 1-5'
@@ -7,7 +7,7 @@
       - cron: '0 20 * * 1-5'
       - cron: '50 20 * * 1-5'
     workflow_dispatch:
-  jobs:
+jobs:
     trade:
       runs-on: ubuntu-latest
       steps:
