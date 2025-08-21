@@ -1,28 +1,36 @@
 name: Strategy C Trading Bot New
 on:
-    workflow_dispatch:
-    schedule:
-      - cron: '30 14 * * 1-5'
-      - cron: '0 16 * * 1-5'
-      - cron: '0 18 * * 1-5'
-      - cron: '0 20 * * 1-5'
-      - cron: '50 20 * * 1-5'
+  workflow_dispatch:
+  schedule:
+    # Year-round schedule that works in both EST (winter) and EDT (summer)
+    # Summer (EDT): 10:30 AM, 12:30 PM, 2:30 PM, 3:30 PM, 3:45 PM EDT  
+    # Winter (EST): 9:30 AM, 11:30 AM, 1:30 PM, 2:30 PM, 2:45 PM EST
+    - cron: '30 14 * * 1-5'  # Run 1: Early market scan
+    - cron: '30 16 * * 1-5'  # Run 2: Mid-morning scan  
+    - cron: '30 18 * * 1-5'  # Run 3: Afternoon scan
+    - cron: '30 19 * * 1-5'  # Run 4: Late afternoon scan
+    - cron: '45 19 * * 1-5'  # Run 5: Final scan before close
+
 jobs:
-    trade:
-      runs-on: ubuntu-latest
-      steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Install packages
-        run: pip install yfinance pandas numpy
-      - name: Run trading bot
-        run: python trading_bot.py
-      - name: Upload results
-        uses: actions/upload-artifact@v4
-        with:
-          name: trading-diary
-          path: "*.json"
+  trade:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install packages
+      run: pip install yfinance pandas numpy
+      
+    - name: Run trading bot
+      run: python trading_bot.py
+      
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: trading-diary-${{ github.run_number }}
+        path: "*.json"
